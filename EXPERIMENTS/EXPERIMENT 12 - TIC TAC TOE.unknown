@@ -1,4 +1,4 @@
-#192424420
+#192421187
 
 def print_board(board):
     for row in board:
