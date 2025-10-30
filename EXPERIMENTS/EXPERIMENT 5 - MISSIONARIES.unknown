@@ -1,0 +1,46 @@
+from collections import deque
+
+def solve_missionaries_cannibals():
+    # state is (missionaries_left, cannibals_left, boat_is_left)
+    start_state = (3, 3, 1)
+    goal_state = (0, 0, 0)
+    
+    q = deque([(start_state, [])])
+    visited = {start_state}
+
+    while q:
+        current_state, path = q.popleft()
+        m, c, b = current_state
+
+        if current_state == goal_state:
+            print("Missionaries and Cannibals Solution:")
+            for p in path:
+                print(p)
+            print(f"Final State: {current_state}")
+            return
+
+        # Possible moves (m_boat, c_boat)
+        moves = [(1, 0), (2, 0), (0, 1), (0, 2), (1, 1)]
+        
+        for dm, dc in moves:
+            if b == 1: # Boat on the left bank
+                nm, nc = m - dm, c - dc
+                nb = 0
+            else: # Boat on the right bank
+                nm, nc = m + dm, c + dc
+                nb = 1
+
+            # Check if the new state is valid
+            if 0 <= nm <= 3 and 0 <= nc <= 3:
+                # Check cannibals don't outnumber missionaries on either bank
+                if (nm == 0 or nm >= nc) and ((3 - nm) == 0 or (3 - nm) >= (3 - nc)):
+                    new_state = (nm, nc, nb)
+                    if new_state not in visited:
+                        visited.add(new_state)
+                        new_path = path + [f"Move ({dm}M, {dc}C). State: {current_state}"]
+                        q.append((new_state, new_path))
+                        
+    print("No solution found.")
+
+# --- Example Usage ---
+solve_missionaries_cannibals()

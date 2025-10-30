@@ -1,0 +1,43 @@
+#192424420
+
+def map_coloring(graph, colors):
+    color_map = {}
+
+    def is_safe(region, color):
+        for neighbor in graph.get(region, []):
+            if neighbor in color_map and color_map[neighbor] == color:
+                return False
+        return True
+
+    def solve(region_index):
+        if region_index == len(regions):
+            return True # All regions colored
+        
+        region = regions[region_index]
+        for color in colors:
+            if is_safe(region, color):
+                color_map[region] = color
+                if solve(region_index + 1):
+                    return True
+                del color_map[region] # Backtrack
+        return False
+    
+    regions = list(graph.keys())
+    if solve(0):
+        print("Map Coloring Solution:", color_map)
+    else:
+        print("No solution found.")
+
+# --- Example Usage ---
+# Australian map regions and their neighbors
+map_graph = {
+    'WA': ['NT', 'SA'],
+    'NT': ['WA', 'SA', 'Q'],
+    'SA': ['WA', 'NT', 'Q', 'NSW', 'V'],
+    'Q': ['NT', 'SA', 'NSW'],
+    'NSW': ['Q', 'SA', 'V'],
+    'V': ['SA', 'NSW'],
+    'T': []
+}
+available_colors = ['Red', 'Green', 'Blue']
+map_coloring(map_graph, available_colors)

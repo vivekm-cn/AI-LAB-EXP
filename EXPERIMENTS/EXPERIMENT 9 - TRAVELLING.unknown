@@ -1,0 +1,38 @@
+from itertools import permutations
+
+def travelling_salesman_brute_force(graph):
+    # Get all cities except the starting one
+    cities = list(graph.keys())
+    start_city = cities[0]
+    other_cities = cities[1:]
+    
+    min_path_cost = float('inf')
+    best_path = []
+    
+    # Generate all possible permutations of other cities
+    for path_permutation in permutations(other_cities):
+        current_path_cost = 0
+        current_path = [start_city] + list(path_permutation) + [start_city]
+        
+        # Calculate cost of this path
+        for i in range(len(current_path) - 1):
+            current_path_cost += graph[current_path[i]][current_path[i+1]]
+            
+        # Update if this path is shorter
+        if current_path_cost < min_path_cost:
+            min_path_cost = current_path_cost
+            best_path = current_path
+            
+    return best_path, min_path_cost
+
+# --- Example Usage ---
+# Adjacency matrix representation of the graph
+tsp_graph = {
+    'A': {'B': 10, 'C': 15, 'D': 20},
+    'B': {'A': 10, 'C': 35, 'D': 25},
+    'C': {'A': 15, 'B': 35, 'D': 30},
+    'D': {'A': 20, 'B': 25, 'C': 30}
+}
+path, cost = travelling_salesman_brute_force(tsp_graph)
+print(f"TSP Best Path: {' -> '.join(path)}")
+print(f"Total Cost: {cost}")

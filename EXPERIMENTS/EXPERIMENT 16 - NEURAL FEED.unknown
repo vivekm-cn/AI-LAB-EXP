@@ -1,0 +1,48 @@
+# You need to install tensorflow: pip install tensorflow
+import tensorflow as tf
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+# Load and preprocess data
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Scale features for better performance
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Build the model
+model = tf.keras.Sequential([
+    # Input layer (4 features) and first hidden layer (10 neurons)
+    tf.keras.layers.Dense(10, activation='relu', input_shape=(4,)),
+    # Second hidden layer
+    tf.keras.layers.Dense(10, activation='relu'),
+    # Output layer (3 classes/species)
+    tf.keras.layers.Dense(3, activation='softmax')
+])
+
+# Compile the model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train, epochs=50, batch_size=5, verbose=0) # verbose=0 for cleaner output
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+print(f"Feed-Forward Neural Network Accuracy: {accuracy * 100:.2f}%")
+
+# Example: Predict a new flower
+new_flower = [[5.1, 3.5, 1.4, 0.2]]
+new_flower_scaled = scaler.transform(new_flower) # Must scale new data too
+prediction_probs = model.predict(new_flower_scaled)
+predicted_class = np.argmax(prediction_probs)
+
+print(f"Prediction for {new_flower}: {iris.target_names[predicted_class]}")

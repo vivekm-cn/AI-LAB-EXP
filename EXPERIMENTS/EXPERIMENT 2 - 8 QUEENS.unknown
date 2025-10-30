@@ -1,0 +1,40 @@
+BOARD_SIZE = 8
+
+def solve_n_queens():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+
+    def is_safe(row, col):
+        # Check column
+        for i in range(row):
+            if board[i][col] == 1:
+                return False
+        # Check upper-left diagonal
+        for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+            if board[i][j] == 1:
+                return False
+        # Check upper-right diagonal
+        for i, j in zip(range(row, -1, -1), range(col, BOARD_SIZE)):
+            if board[i][j] == 1:
+                return False
+        return True
+
+    def solve(row):
+        if row >= BOARD_SIZE:
+            return True # All queens are placed
+        for col in range(BOARD_SIZE):
+            if is_safe(row, col):
+                board[row][col] = 1 # Place queen
+                if solve(row + 1):
+                    return True
+                board[row][col] = 0 # Backtrack
+        return False
+
+    if solve(0):
+        print("8-Queens Solution:")
+        for row in board:
+            print(" ".join("Q" if x else "." for x in row))
+    else:
+        print("No solution found.")
+
+# --- Example Usage ---
+solve_n_queens()

@@ -1,0 +1,22 @@
+import collections
+
+def bfs(graph, start_node):
+    visited = set()
+    queue = collections.deque([start_node])
+    visited.add(start_node)
+    
+    traversal_order = []
+    
+    while queue:
+        node = queue.popleft()
+        traversal_order.append(node)
+        
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    return traversal_order
+
+# --- Example Usage ---
+graph = {'A': ['B', 'C'], 'B': ['D', 'E'], 'C': ['F'], 'D': [], 'E': [], 'F': []}
+print("BFS Traversal:", bfs(graph, 'A'))

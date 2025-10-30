@@ -1,0 +1,34 @@
+def vacuum_cleaner(location, status):
+    """A simple reflex vacuum agent."""
+    if status == 'Dirty':
+        return 'Suck'
+    elif location == 'A':
+        return 'Move Right'
+    elif location == 'B':
+        return 'Move Left'
+
+def run_simulation(world):
+    location = 'A' # Start at location A
+    print("Initial World State:", world)
+    print(f"Vacuum starts at Location {location}")
+    
+    # Run for a fixed number of steps
+    for _ in range(4):
+        status = world[location]
+        action = vacuum_cleaner(location, status)
+        
+        print(f"Location: {location}, Status: {status}, Action: {action}")
+        
+        if action == 'Suck':
+            world[location] = 'Clean'
+        elif action == 'Move Right':
+            location = 'B'
+        elif action == 'Move Left':
+            location = 'A'
+            
+    print("Final World State:", world)
+
+# --- Example Usage ---
+# World is a dictionary representing locations and their status
+world_state = {'A': 'Dirty', 'B': 'Dirty'}
+run_simulation(world_state)

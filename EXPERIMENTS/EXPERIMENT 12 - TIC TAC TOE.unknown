@@ -1,0 +1,51 @@
+#192424420
+
+def print_board(board):
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 9)
+
+def check_winner(board):
+    # Check rows, columns, and diagonals
+    lines = (board +
+             [[board[i][j] for i in range(3)] for j in range(3)] +
+             [[board[i][i] for i in range(3)]] +
+             [[board[i][2-i] for i in range(3)]])
+    
+    for line in lines:
+        if line[0] == line[1] == line[2] and line[0] != ' ':
+            return line[0] # Return winner ('X' or 'O')
+    return None
+
+def tic_tac_toe():
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    current_player = 'X'
+    
+    for _ in range(9): # 9 turns max
+        print_board(board)
+        while True:
+            try:
+                row = int(input(f"Player {current_player}, enter row (0-2): "))
+                col = int(input(f"Player {current_player}, enter col (0-2): "))
+                if 0 <= row <= 2 and 0 <= col <= 2 and board[row][col] == ' ':
+                    board[row][col] = current_player
+                    break
+                else:
+                    print("Invalid move. Try again.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+        
+        winner = check_winner(board)
+        if winner:
+            print_board(board)
+            print(f"Player {winner} wins!")
+            return
+            
+        current_player = 'O' if current_player == 'X' else 'X'
+
+    print_board(board)
+    print("It's a draw!")
+
+# --- Example Usage ---
+# tic_tac_toe() # Uncomment to play
+print("Tic-Tac-Toe game logic is ready.")
